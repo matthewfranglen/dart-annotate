@@ -134,3 +134,8 @@ The values returned by the filterByAnnotation and expandToAnnotations methods ar
     var objectFilter = InstanceAnnotationFacade.filterByAnnotation(ExampleAnnotation);
 
     objectList.where(objectFilter)...
+
+Example Code
+------------
+
+Example code is available in the _example_ directory.
