@@ -202,8 +202,14 @@ class DeclarationAnnotationFacade extends AbstractAnnotationFacade {
 
   DeclarationAnnotationFacade(this._declaration);
 
-  Iterable<InstanceMirror> _getAnnotations() =>
-      _declaration.metadata;
+  Iterable<InstanceMirror> _getAnnotations() {
+    try {
+      return _declaration.metadata;
+    }
+    catch (exception) {
+      return [];
+    }
+  }
 }
 
 /// Test value for annotations
