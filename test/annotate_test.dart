@@ -18,6 +18,11 @@ void main() {
     .test();
 
   feature.scenario("Inspecting types for annotations")
+    .when("I test for missing annotations on an annotated type")
+    .then("the test fails")
+    .test();
+
+  feature.scenario("Inspecting types for annotations")
     .when("I test for annotations on an unannotated type")
     .then("the test fails")
     .test();
@@ -98,42 +103,37 @@ void main() {
 class _Steps {
   @Given("a method with annotated parameters")
   void givenAMethodWithAnnotatedParameters(Map<String, dynamic> context) {
-
+    Symbol methodName = const Symbol('method');
+    MethodMirror method = reflect(new AnnotatedClass.annotatedConstructor()).type.instanceMembers[methodName];
+    context["method"] = method;
   }
 
   @Given("an annotated object")
-  void givenAnAnnotatedObject(Map<String, dynamic> context) {
-
-  }
-
   @Given("an object with annotated fields")
-  void givenAnObjectWithAnnotatedFields(Map<String, dynamic> context) {
-
-  }
-
   @Given("an object with annotated methods")
-  void givenAnObjectWithAnnotatedMethods(Map<String, dynamic> context) {
-
+  void givenAnAnnotatedObject(Map<String, dynamic> context) {
+    context["object"] = new AnnotatedClass.annotatedConstructor();
   }
 
   @Given("an unannotated object")
   void givenAnUnannotatedObject(Map<String, dynamic> context) {
-
+    context["object"] = new UnannotatedClass();
   }
 
   @When("I find methods with an annotation")
   void whenIFindMethodsWithAnAnnotation(Map<String, dynamic> context) {
-
+    context["methods"] = reflect(context["object"]).type.instanceMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
   }
 
   @When("I test for annotations on an annotated type")
   void whenITestForAnnotationsOnAnAnnotatedType(Map<String, dynamic> context) {
-
+    context["result"] = new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(Annotation);
   }
 
   @When("I test for annotations on an unannotated type")
   void whenITestForAnnotationsOnAnUnannotatedType(Map<String, dynamic> context) {
-
+    context["result"] = new TypeAnnotationFacade(UnannotatedClass).hasAnnotationOf(Annotation);
   }
 
   @When("I test for annotations")
@@ -154,6 +154,11 @@ class _Steps {
   @When("I test for missing annotations")
   void whenITestForMissingAnnotations(Map<String, dynamic> context) {
 
+  }
+
+  @When("I test for missing annotations on an annotated type")
+  void whenITestForMissingAnnotationsOnAnAnnotatedType(Map<String, dynamic> context) {
+    context["result"] = new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(MissingAnnotation);
   }
 
   @When("I test for static methods with a missing annotation")
@@ -236,9 +241,6 @@ typedef dynamic Clause();
 
 Future<dynamic> given(Clause clause) => new Future.value(clause());
 Future<dynamic> when(Clause clause) => new Future.value(clause());
-
-bool testAnnotatedClass() =>
-  new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(Annotation);
 
 bool testAnnotatedClassForMissingAnnotations() =>
   new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(MissingAnnotation);
