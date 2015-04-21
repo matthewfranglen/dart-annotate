@@ -138,22 +138,24 @@ class _Steps {
 
   @When("I test for annotations")
   void whenITestForAnnotations(Map<String, dynamic> context) {
-
+    context["result"] = new InstanceAnnotationFacade(context["object"]).hasAnnotationOf(Annotation);
   }
 
   @When("I test for methods with a missing annotation")
   void whenITestForMethodsWithAMissingAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = reflect(context["object"]).type.instanceMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
   }
 
   @When("I test for methods with an annotation")
   void whenITestForMethodsWithAnAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = reflect(context["object"]).type.instanceMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
   }
 
   @When("I test for missing annotations")
   void whenITestForMissingAnnotations(Map<String, dynamic> context) {
-
+    context["result"] = new InstanceAnnotationFacade(context["object"]).hasAnnotationOf(MissingAnnotation);
   }
 
   @When("I test for missing annotations on an annotated type")
@@ -163,32 +165,42 @@ class _Steps {
 
   @When("I test for static methods with a missing annotation")
   void whenITestForStaticMethodsWithAMissingAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = reflect(context["object"]).type.staticMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
   }
 
   @When("I test for static methods with an annotation")
   void whenITestForStaticMethodsWithAnAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = reflect(context["object"]).type.staticMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
   }
 
   @When("I test method parameters for a missing annotation")
   void whenITestMethodParametersForAMissingAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = (context["method"] as MethodMirror).parameters
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
   }
 
   @When("I test method parameters for an annotation")
   void whenITestMethodParametersForAnAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = (context["method"] as MethodMirror).parameters
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
   }
 
   @When("I test static and instance fields for a missing annotation")
   void whenITestStaticAndInstanceFieldsForAMissingAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = reflect(context["object"]).type.declarations.values
+      .where(isVariableMirror)
+      .map(toVariableMirror)
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
   }
 
   @When("I test static and instance fields for an annotation")
   void whenITestStaticAndInstanceFieldsForAnAnnotation(Map<String, dynamic> context) {
-
+    context["result"] = reflect(context["object"]).type.declarations.values
+      .where(isVariableMirror)
+      .map(toVariableMirror)
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
   }
 
   @Then("getters and setters are found")
@@ -268,18 +280,6 @@ Clause testStaticMethods(Object object) =>
 
 Clause testStaticMethodsForMissingAnnotations(Object object) =>
   () => reflect(object).type.staticMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
-
-Clause testFields(Object object) =>
-  () => reflect(object).type.declarations.values
-    .where(isVariableMirror)
-    .map(toVariableMirror)
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
-
-Clause testFieldsForMissingAnnotations(Object object) =>
-  () => reflect(object).type.declarations.values
-    .where(isVariableMirror)
-    .map(toVariableMirror)
     .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
 
 bool isVariableMirror(DeclarationMirror mirror) =>
