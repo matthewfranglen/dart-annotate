@@ -5,8 +5,6 @@ import 'package:unittest/unittest.dart';
 import 'package:behave/behave.dart';
 import 'test_data.dart';
 
-final String nl = "\n     ";
-
 void main() {
   Feature feature = new Feature("Can test for annotations");
 
@@ -205,82 +203,49 @@ class _Steps {
 
   @Then("getters and setters are found")
   void thenGettersAndSettersAreFound(Map<String, dynamic> context) {
+    Iterable<MethodMirror> result = context["methods"] as Iterable;
 
+    Symbol getterName, setterName;
+    bool hasGetters, hasSetters;
+
+    getterName = const Symbol('annotatedGetter');
+    hasGetters = result.any((MethodMirror method) => method.simpleName == getterName);
+
+    setterName = const Symbol('annotatedSetter=');
+    hasSetters = result.any((MethodMirror method) => method.simpleName == setterName);
+
+    expect(hasGetters, isTrue);
+    expect(hasSetters, isTrue);
   }
 
   @Then("no fields are found")
-  void thenNoFieldsAreFound(Map<String, dynamic> context) {
-
-  }
-
   @Then("no methods are found")
-  void thenNoMethodsAreFound(Map<String, dynamic> context) {
-
-  }
-
   @Then("no parameters are found")
-  void thenNoParametersAreFound(Map<String, dynamic> context) {
-
+  void thenNoResultsFound(Map<String, dynamic> context) {
+    Iterable<dynamic> result = context["result"] as Iterable;
+    expect(result, isEmpty);
   }
 
   @Then("some fields are found")
-  void thenSomeFieldsAreFound(Map<String, dynamic> context) {
-
-  }
-
   @Then("some methods are found")
-  void thenSomeMethodsAreFound(Map<String, dynamic> context) {
-
-  }
-
   @Then("some parameters are found")
-  void thenSomeParametersAreFound(Map<String, dynamic> context) {
-
+  void thenSomeResultsFound(Map<String, dynamic> context) {
+    Iterable<dynamic> result = context["result"] as Iterable;
+    expect(result, isNotEmpty);
   }
 
   @Then("the test fails")
   void thenTheTestFails(Map<String, dynamic> context) {
-
+    bool result = context["result"] as bool;
+    expect(result, isFalse);
   }
 
   @Then("the test is successful")
   void thenTheTestIsSuccessful(Map<String, dynamic> context) {
-
+    bool result = context["result"] as bool;
+    expect(result, isTrue);
   }
 }
-
-typedef dynamic Clause();
-
-Future<dynamic> given(Clause clause) => new Future.value(clause());
-Future<dynamic> when(Clause clause) => new Future.value(clause());
-
-bool testAnnotatedClassForMissingAnnotations() =>
-  new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(MissingAnnotation);
-
-bool testUnannotatedClass() =>
-  new TypeAnnotationFacade(UnannotatedClass).hasAnnotationOf(Annotation);
-
-Clause testObject(Object object) =>
-  () => new InstanceAnnotationFacade(object).hasAnnotationOf(Annotation);
-
-Clause testObjectForMissingAnnotations(Object object) =>
-  () => new InstanceAnnotationFacade(object).hasAnnotationOf(MissingAnnotation);
-
-Clause testMethods(Object object) =>
-  () => reflect(object).type.instanceMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
-
-Clause testMethodsForMissingAnnotations(Object object) =>
-  () => reflect(object).type.instanceMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
-
-Clause testStaticMethods(Object object) =>
-  () => reflect(object).type.staticMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
-
-Clause testStaticMethodsForMissingAnnotations(Object object) =>
-  () => reflect(object).type.staticMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
 
 bool isVariableMirror(DeclarationMirror mirror) =>
   mirror is VariableMirror;
@@ -288,43 +253,4 @@ bool isVariableMirror(DeclarationMirror mirror) =>
 VariableMirror toVariableMirror(DeclarationMirror mirror) =>
   mirror as VariableMirror;
 
-Clause testParameters(MethodMirror method) =>
-  () => method.parameters
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
-
-Clause testParametersForMissingAnnotations(MethodMirror method) =>
-  () => method.parameters
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
-
-void annotationIsPresent(bool result) {
-  expect(result, isTrue);
-}
-
-void annotationIsMissing(bool result) {
-  expect(result, isFalse);
-}
-
-void someResultsFound(Iterable<dynamic> result) {
-  expect(result, isNotEmpty);
-}
-
-void noResultsFound(Iterable<dynamic> result) {
-  expect(result, isEmpty);
-}
-
-void resultsContainGettersAndSetters(Iterable<MethodMirror> result) {
-  Symbol getterName, setterName;
-  bool hasGetters, hasSetters;
-
-  getterName = const Symbol('annotatedGetter');
-  hasGetters = result.any((MethodMirror method) => method.simpleName == getterName);
-
-  setterName = const Symbol('annotatedSetter=');
-  hasSetters = result.any((MethodMirror method) => method.simpleName == setterName);
-
-  expect(hasGetters, isTrue);
-  expect(hasSetters, isTrue);
-}
-
 // vim: set ai et sw=2 syntax=dart :
-
