@@ -2,100 +2,100 @@ import 'dart:async';
 import 'dart:mirrors';
 import 'package:annotate/annotate.dart';
 import 'package:unittest/unittest.dart';
+import 'package:behave/behave.dart';
 import 'test_data.dart';
 
 final String nl = "\n     ";
 
 void main() {
-  group('', () {
-    test('When I test for annotations on an annotated type${nl} Then the test is successful',
-      () => when(testAnnotatedClass).then(annotationIsPresent)
-    );
-    test('When I test for missing annotations on an annotated type${nl} Then the test fails',
-      () => when(testAnnotatedClassForMissingAnnotations).then(annotationIsMissing)
-    );
-    test('When I test for annotations on an unannotated type${nl} Then the test fails',
-      () => when(testUnannotatedClass).then(annotationIsMissing)
-    );
-  });
+  Feature feature = new Feature("Can test for annotations");
 
-  group('Given an annotated object${nl}', () {
-    Object object;
+  feature.load(new _Steps());
 
-    setUp(() {
-      object = new AnnotatedClass.annotatedConstructor();
-    });
-    test('When I test for annotations${nl} Then the test is successful',
-      () => when(testObject(object)).then(annotationIsPresent)
-    );
-    test('When I test for missing annotations${nl} Then the test fails',
-      () => when(testObjectForMissingAnnotations(object)).then(annotationIsMissing)
-    );
-  });
+  feature.scenario("Inspecting types for annotations")
+    .when("I test for annotations on an annotated type")
+    .then("the test is successful")
+    .test();
 
-  group('Given an unannotated object${nl}', () {
-    Object object;
+  feature.scenario("Inspecting types for annotations")
+    .when("I test for annotations on an unannotated type")
+    .then("the test fails")
+    .test();
 
-    setUp(() {
-      object = new UnannotatedClass();
-    });
-    test('When I test for annotations${nl} Then the test fails',
-      () => when(testObject(object)).then(annotationIsMissing)
-    );
-  });
+  feature.scenario("Inspecting instances for annotations")
+    .given("an annotated object")
+    .when("I test for annotations")
+    .then("the test is successful")
+    .test();
 
-  group('Given an object with annotated methods${nl}', () {
-    Object object;
+  feature.scenario("Inspecting instances for annotations")
+    .given("an annotated object")
+    .when("I test for missing annotations")
+    .then("the test fails")
+    .test();
 
-    setUp(() {
-      object = new AnnotatedClass.annotatedConstructor();
-    });
-    test('When I test for methods with an annotation${nl} Then some methods are found',
-      () => when(testMethods(object)).then(someResultsFound)
-    );
-    test('When I test for methods with a missing annotation${nl} Then no methods are found',
-      () => when(testMethodsForMissingAnnotations(object)).then(noResultsFound)
-    );
-    test('When I test for static methods with an annotation${nl} Then some methods are found',
-      () => when(testStaticMethods(object)).then(someResultsFound)
-    );
-    test('When I test for static methods with a missing annotation${nl} Then no methods are found',
-      () => when(testStaticMethodsForMissingAnnotations(object)).then(noResultsFound)
-    );
-    test('When I find methods with an annotation${nl} Then setters and getters are found',
-      () => when(testMethods(object)).then(resultsContainGettersAndSetters)
-    );
-  });
+  feature.scenario("Inspecting instances for annotations")
+    .given("an unannotated object")
+    .when("I test for annotations")
+    .then("the test fails")
+    .test();
 
-  group('Given an object with annotated fields${nl}', () {
-    Object object;
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for methods with an annotation")
+    .then("some methods are found")
+    .test();
 
-    setUp(() {
-      object = new AnnotatedClass.annotatedConstructor();
-    });
-    test('When I test static and instance fields for an annotation${nl} Then some fields are found',
-      () => when(testFields(object)).then(someResultsFound)
-    );
-    test('When I test static and instance fields for a missing annotation${nl} Then no fields are found',
-      () => when(testFieldsForMissingAnnotations(object)).then(noResultsFound)
-    );
-  });
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for methods with a missing annotation")
+    .then("no methods are found")
+    .test();
 
-  group('Given a method with annotated parameters${nl}', () {
-    MethodMirror method;
-    Symbol methodName = const Symbol('method');
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for static methods with an annotation")
+    .then("some methods are found")
+    .test();
 
-    setUp(() {
-      method = reflect(new AnnotatedClass.annotatedConstructor())
-          .type.instanceMembers[methodName];
-    });
-    test('When I test method parameters for an annotation${nl} Then some parameters are found',
-      () => when(testParameters(method)).then(someResultsFound)
-    );
-    test('When I test method parameters for a missing annotation${nl} Then no parameters are found',
-      () => when(testParametersForMissingAnnotations(method)).then(noResultsFound)
-    );
-  });
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for static methods with a missing annotation")
+    .then("no methods are found")
+    .test();
+
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I find methods with an annotation")
+    .then("getters and setters are found")
+    .test();
+
+  feature.scenario("Inspecting instances for annotated fields")
+    .given("an object with annotated fields")
+    .when("I test static and instance fields for an annotation")
+    .then("some fields are found")
+    .test();
+
+  feature.scenario("Inspecting instances for annotated fields")
+    .given("an object with annotated fields")
+    .when("I test static and instance fields for a missing annotation")
+    .then("no fields are found")
+    .test();
+
+  feature.scenario("Inspecting methods for annotated parameters")
+    .given("a method with annotated parameters")
+    .when("I test method parameters for an annotation")
+    .then("some parameters are found")
+    .test();
+
+  feature.scenario("Inspecting methods for annotated parameters")
+    .given("a method with annotated parameters")
+    .when("I test method parameters for a missing annotation")
+    .then("no parameters are found")
+    .test();
+}
+
+class _Steps {
 }
 
 typedef dynamic Clause();
