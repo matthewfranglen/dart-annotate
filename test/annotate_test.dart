@@ -96,6 +96,140 @@ void main() {
 }
 
 class _Steps {
+  @Given("a method with annotated parameters")
+  void givenAMethodWithAnnotatedParameters(Map<String, dynamic> context) {
+
+  }
+
+  @Given("an annotated object")
+  void givenAnAnnotatedObject(Map<String, dynamic> context) {
+
+  }
+
+  @Given("an object with annotated fields")
+  void givenAnObjectWithAnnotatedFields(Map<String, dynamic> context) {
+
+  }
+
+  @Given("an object with annotated methods")
+  void givenAnObjectWithAnnotatedMethods(Map<String, dynamic> context) {
+
+  }
+
+  @Given("an unannotated object")
+  void givenAnUnannotatedObject(Map<String, dynamic> context) {
+
+  }
+
+  @When("I find methods with an annotation")
+  void whenIFindMethodsWithAnAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for annotations on an annotated type")
+  void whenITestForAnnotationsOnAnAnnotatedType(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for annotations on an unannotated type")
+  void whenITestForAnnotationsOnAnUnannotatedType(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for annotations")
+  void whenITestForAnnotations(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for methods with a missing annotation")
+  void whenITestForMethodsWithAMissingAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for methods with an annotation")
+  void whenITestForMethodsWithAnAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for missing annotations")
+  void whenITestForMissingAnnotations(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for static methods with a missing annotation")
+  void whenITestForStaticMethodsWithAMissingAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test for static methods with an annotation")
+  void whenITestForStaticMethodsWithAnAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test method parameters for a missing annotation")
+  void whenITestMethodParametersForAMissingAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test method parameters for an annotation")
+  void whenITestMethodParametersForAnAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test static and instance fields for a missing annotation")
+  void whenITestStaticAndInstanceFieldsForAMissingAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @When("I test static and instance fields for an annotation")
+  void whenITestStaticAndInstanceFieldsForAnAnnotation(Map<String, dynamic> context) {
+
+  }
+
+  @Then("getters and setters are found")
+  void thenGettersAndSettersAreFound(Map<String, dynamic> context) {
+
+  }
+
+  @Then("no fields are found")
+  void thenNoFieldsAreFound(Map<String, dynamic> context) {
+
+  }
+
+  @Then("no methods are found")
+  void thenNoMethodsAreFound(Map<String, dynamic> context) {
+
+  }
+
+  @Then("no parameters are found")
+  void thenNoParametersAreFound(Map<String, dynamic> context) {
+
+  }
+
+  @Then("some fields are found")
+  void thenSomeFieldsAreFound(Map<String, dynamic> context) {
+
+  }
+
+  @Then("some methods are found")
+  void thenSomeMethodsAreFound(Map<String, dynamic> context) {
+
+  }
+
+  @Then("some parameters are found")
+  void thenSomeParametersAreFound(Map<String, dynamic> context) {
+
+  }
+
+  @Then("the test fails")
+  void thenTheTestFails(Map<String, dynamic> context) {
+
+  }
+
+  @Then("the test is successful")
+  void thenTheTestIsSuccessful(Map<String, dynamic> context) {
+
+  }
 }
 
 typedef dynamic Clause();
@@ -191,3 +325,4 @@ void resultsContainGettersAndSetters(Iterable<MethodMirror> result) {
 }
 
 // vim: set ai et sw=2 syntax=dart :
+
