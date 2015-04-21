@@ -1,5 +1,5 @@
 name: annotate
-version: 0.0.3
+version: 0.0.4
 author: Matthew Franglen <matthew.franglen@gmail.com>
 homepage: https://github.com/matthewfranglen/dart-annotate
 description: Easy way to find or test for annotations on object, classes, etc.
