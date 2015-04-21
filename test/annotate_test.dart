@@ -2,192 +2,255 @@ import 'dart:async';
 import 'dart:mirrors';
 import 'package:annotate/annotate.dart';
 import 'package:unittest/unittest.dart';
+import 'package:behave/behave.dart';
 import 'test_data.dart';
 
-final String nl = "\n     ";
-
 void main() {
-  group('', () {
-    test('When I test for annotations on an annotated type${nl} Then the test is successful',
-      () => when(testAnnotatedClass).then(annotationIsPresent)
-    );
-    test('When I test for missing annotations on an annotated type${nl} Then the test fails',
-      () => when(testAnnotatedClassForMissingAnnotations).then(annotationIsMissing)
-    );
-    test('When I test for annotations on an unannotated type${nl} Then the test fails',
-      () => when(testUnannotatedClass).then(annotationIsMissing)
-    );
-  });
+  Feature feature = new Feature("Can test for annotations");
 
-  group('Given an annotated object${nl}', () {
-    Object object;
+  feature.load(new _Steps());
 
-    setUp(() {
-      object = new AnnotatedClass.annotatedConstructor();
-    });
-    test('When I test for annotations${nl} Then the test is successful',
-      () => when(testObject(object)).then(annotationIsPresent)
-    );
-    test('When I test for missing annotations${nl} Then the test fails',
-      () => when(testObjectForMissingAnnotations(object)).then(annotationIsMissing)
-    );
-  });
+  feature.scenario("Inspecting types for annotations")
+    .when("I test for annotations on an annotated type")
+    .then("the test is successful")
+    .test();
 
-  group('Given an unannotated object${nl}', () {
-    Object object;
+  feature.scenario("Inspecting types for annotations")
+    .when("I test for missing annotations on an annotated type")
+    .then("the test fails")
+    .test();
 
-    setUp(() {
-      object = new UnannotatedClass();
-    });
-    test('When I test for annotations${nl} Then the test fails',
-      () => when(testObject(object)).then(annotationIsMissing)
-    );
-  });
+  feature.scenario("Inspecting types for annotations")
+    .when("I test for annotations on an unannotated type")
+    .then("the test fails")
+    .test();
 
-  group('Given an object with annotated methods${nl}', () {
-    Object object;
+  feature.scenario("Inspecting instances for annotations")
+    .given("an annotated object")
+    .when("I test for annotations")
+    .then("the test is successful")
+    .test();
 
-    setUp(() {
-      object = new AnnotatedClass.annotatedConstructor();
-    });
-    test('When I test for methods with an annotation${nl} Then some methods are found',
-      () => when(testMethods(object)).then(someResultsFound)
-    );
-    test('When I test for methods with a missing annotation${nl} Then no methods are found',
-      () => when(testMethodsForMissingAnnotations(object)).then(noResultsFound)
-    );
-    test('When I test for static methods with an annotation${nl} Then some methods are found',
-      () => when(testStaticMethods(object)).then(someResultsFound)
-    );
-    test('When I test for static methods with a missing annotation${nl} Then no methods are found',
-      () => when(testStaticMethodsForMissingAnnotations(object)).then(noResultsFound)
-    );
-    test('When I find methods with an annotation${nl} Then setters and getters are found',
-      () => when(testMethods(object)).then(resultsContainGettersAndSetters)
-    );
-  });
+  feature.scenario("Inspecting instances for annotations")
+    .given("an annotated object")
+    .when("I test for missing annotations")
+    .then("the test fails")
+    .test();
 
-  group('Given an object with annotated fields${nl}', () {
-    Object object;
+  feature.scenario("Inspecting instances for annotations")
+    .given("an unannotated object")
+    .when("I test for annotations")
+    .then("the test fails")
+    .test();
 
-    setUp(() {
-      object = new AnnotatedClass.annotatedConstructor();
-    });
-    test('When I test static and instance fields for an annotation${nl} Then some fields are found',
-      () => when(testFields(object)).then(someResultsFound)
-    );
-    test('When I test static and instance fields for a missing annotation${nl} Then no fields are found',
-      () => when(testFieldsForMissingAnnotations(object)).then(noResultsFound)
-    );
-  });
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for methods with an annotation")
+    .then("some methods are found")
+    .test();
 
-  group('Given a method with annotated parameters${nl}', () {
-    MethodMirror method;
-    Symbol methodName = const Symbol('method');
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for methods with a missing annotation")
+    .then("no methods are found")
+    .test();
 
-    setUp(() {
-      method = reflect(new AnnotatedClass.annotatedConstructor())
-          .type.instanceMembers[methodName];
-    });
-    test('When I test method parameters for an annotation${nl} Then some parameters are found',
-      () => when(testParameters(method)).then(someResultsFound)
-    );
-    test('When I test method parameters for a missing annotation${nl} Then no parameters are found',
-      () => when(testParametersForMissingAnnotations(method)).then(noResultsFound)
-    );
-  });
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for static methods with an annotation")
+    .then("some methods are found")
+    .test();
+
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I test for static methods with a missing annotation")
+    .then("no methods are found")
+    .test();
+
+  feature.scenario("Inspecting instances for annotated methods")
+    .given("an object with annotated methods")
+    .when("I find methods with an annotation")
+    .then("getters and setters are found")
+    .test();
+
+  feature.scenario("Inspecting instances for annotated fields")
+    .given("an object with annotated fields")
+    .when("I test static and instance fields for an annotation")
+    .then("some fields are found")
+    .test();
+
+  feature.scenario("Inspecting instances for annotated fields")
+    .given("an object with annotated fields")
+    .when("I test static and instance fields for a missing annotation")
+    .then("no fields are found")
+    .test();
+
+  feature.scenario("Inspecting methods for annotated parameters")
+    .given("a method with annotated parameters")
+    .when("I test method parameters for an annotation")
+    .then("some parameters are found")
+    .test();
+
+  feature.scenario("Inspecting methods for annotated parameters")
+    .given("a method with annotated parameters")
+    .when("I test method parameters for a missing annotation")
+    .then("no parameters are found")
+    .test();
 }
 
-typedef dynamic Clause();
+class _Steps {
+  @Given("a method with annotated parameters")
+  void givenAMethodWithAnnotatedParameters(Map<String, dynamic> context) {
+    Symbol methodName = const Symbol('method');
+    MethodMirror method = reflect(new AnnotatedClass.annotatedConstructor()).type.instanceMembers[methodName];
+    context["method"] = method;
+  }
 
-Future<dynamic> given(Clause clause) => new Future.value(clause());
-Future<dynamic> when(Clause clause) => new Future.value(clause());
+  @Given("an annotated object")
+  @Given("an object with annotated fields")
+  @Given("an object with annotated methods")
+  void givenAnAnnotatedObject(Map<String, dynamic> context) {
+    context["object"] = new AnnotatedClass.annotatedConstructor();
+  }
 
-bool testAnnotatedClass() =>
-  new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(Annotation);
+  @Given("an unannotated object")
+  void givenAnUnannotatedObject(Map<String, dynamic> context) {
+    context["object"] = new UnannotatedClass();
+  }
 
-bool testAnnotatedClassForMissingAnnotations() =>
-  new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(MissingAnnotation);
+  @When("I find methods with an annotation")
+  void whenIFindMethodsWithAnAnnotation(Map<String, dynamic> context) {
+    context["methods"] = reflect(context["object"]).type.instanceMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  }
 
-bool testUnannotatedClass() =>
-  new TypeAnnotationFacade(UnannotatedClass).hasAnnotationOf(Annotation);
+  @When("I test for annotations on an annotated type")
+  void whenITestForAnnotationsOnAnAnnotatedType(Map<String, dynamic> context) {
+    context["result"] = new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(Annotation);
+  }
 
-Clause testObject(Object object) =>
-  () => new InstanceAnnotationFacade(object).hasAnnotationOf(Annotation);
+  @When("I test for annotations on an unannotated type")
+  void whenITestForAnnotationsOnAnUnannotatedType(Map<String, dynamic> context) {
+    context["result"] = new TypeAnnotationFacade(UnannotatedClass).hasAnnotationOf(Annotation);
+  }
 
-Clause testObjectForMissingAnnotations(Object object) =>
-  () => new InstanceAnnotationFacade(object).hasAnnotationOf(MissingAnnotation);
+  @When("I test for annotations")
+  void whenITestForAnnotations(Map<String, dynamic> context) {
+    context["result"] = new InstanceAnnotationFacade(context["object"]).hasAnnotationOf(Annotation);
+  }
 
-Clause testMethods(Object object) =>
-  () => reflect(object).type.instanceMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  @When("I test for methods with a missing annotation")
+  void whenITestForMethodsWithAMissingAnnotation(Map<String, dynamic> context) {
+    context["result"] = reflect(context["object"]).type.instanceMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
+  }
 
-Clause testMethodsForMissingAnnotations(Object object) =>
-  () => reflect(object).type.instanceMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
+  @When("I test for methods with an annotation")
+  void whenITestForMethodsWithAnAnnotation(Map<String, dynamic> context) {
+    context["result"] = reflect(context["object"]).type.instanceMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  }
 
-Clause testStaticMethods(Object object) =>
-  () => reflect(object).type.staticMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  @When("I test for missing annotations")
+  void whenITestForMissingAnnotations(Map<String, dynamic> context) {
+    context["result"] = new InstanceAnnotationFacade(context["object"]).hasAnnotationOf(MissingAnnotation);
+  }
 
-Clause testStaticMethodsForMissingAnnotations(Object object) =>
-  () => reflect(object).type.staticMembers.values
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
+  @When("I test for missing annotations on an annotated type")
+  void whenITestForMissingAnnotationsOnAnAnnotatedType(Map<String, dynamic> context) {
+    context["result"] = new TypeAnnotationFacade(AnnotatedClass).hasAnnotationOf(MissingAnnotation);
+  }
 
-Clause testFields(Object object) =>
-  () => reflect(object).type.declarations.values
-    .where(isVariableMirror)
-    .map(toVariableMirror)
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  @When("I test for static methods with a missing annotation")
+  void whenITestForStaticMethodsWithAMissingAnnotation(Map<String, dynamic> context) {
+    context["result"] = reflect(context["object"]).type.staticMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
+  }
 
-Clause testFieldsForMissingAnnotations(Object object) =>
-  () => reflect(object).type.declarations.values
-    .where(isVariableMirror)
-    .map(toVariableMirror)
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
+  @When("I test for static methods with an annotation")
+  void whenITestForStaticMethodsWithAnAnnotation(Map<String, dynamic> context) {
+    context["result"] = reflect(context["object"]).type.staticMembers.values
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  }
+
+  @When("I test method parameters for a missing annotation")
+  void whenITestMethodParametersForAMissingAnnotation(Map<String, dynamic> context) {
+    context["result"] = (context["method"] as MethodMirror).parameters
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
+  }
+
+  @When("I test method parameters for an annotation")
+  void whenITestMethodParametersForAnAnnotation(Map<String, dynamic> context) {
+    context["result"] = (context["method"] as MethodMirror).parameters
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  }
+
+  @When("I test static and instance fields for a missing annotation")
+  void whenITestStaticAndInstanceFieldsForAMissingAnnotation(Map<String, dynamic> context) {
+    context["result"] = reflect(context["object"]).type.declarations.values
+      .where(isVariableMirror)
+      .map(toVariableMirror)
+      .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
+  }
+
+  @When("I test static and instance fields for an annotation")
+  void whenITestStaticAndInstanceFieldsForAnAnnotation(Map<String, dynamic> context) {
+    context["result"] = reflect(context["object"]).type.declarations.values
+      .where(isVariableMirror)
+      .map(toVariableMirror)
+      .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
+  }
+
+  @Then("getters and setters are found")
+  void thenGettersAndSettersAreFound(Map<String, dynamic> context) {
+    Iterable<MethodMirror> result = context["methods"] as Iterable;
+
+    Symbol getterName, setterName;
+    bool hasGetters, hasSetters;
+
+    getterName = const Symbol('annotatedGetter');
+    hasGetters = result.any((MethodMirror method) => method.simpleName == getterName);
+
+    setterName = const Symbol('annotatedSetter=');
+    hasSetters = result.any((MethodMirror method) => method.simpleName == setterName);
+
+    expect(hasGetters, isTrue);
+    expect(hasSetters, isTrue);
+  }
+
+  @Then("no fields are found")
+  @Then("no methods are found")
+  @Then("no parameters are found")
+  void thenNoResultsFound(Map<String, dynamic> context) {
+    Iterable<dynamic> result = context["result"] as Iterable;
+    expect(result, isEmpty);
+  }
+
+  @Then("some fields are found")
+  @Then("some methods are found")
+  @Then("some parameters are found")
+  void thenSomeResultsFound(Map<String, dynamic> context) {
+    Iterable<dynamic> result = context["result"] as Iterable;
+    expect(result, isNotEmpty);
+  }
+
+  @Then("the test fails")
+  void thenTheTestFails(Map<String, dynamic> context) {
+    bool result = context["result"] as bool;
+    expect(result, isFalse);
+  }
+
+  @Then("the test is successful")
+  void thenTheTestIsSuccessful(Map<String, dynamic> context) {
+    bool result = context["result"] as bool;
+    expect(result, isTrue);
+  }
+}
 
 bool isVariableMirror(DeclarationMirror mirror) =>
   mirror is VariableMirror;
 
 VariableMirror toVariableMirror(DeclarationMirror mirror) =>
   mirror as VariableMirror;
-
-Clause testParameters(MethodMirror method) =>
-  () => method.parameters
-    .where(DeclarationAnnotationFacade.filterByAnnotation(Annotation));
-
-Clause testParametersForMissingAnnotations(MethodMirror method) =>
-  () => method.parameters
-    .where(DeclarationAnnotationFacade.filterByAnnotation(MissingAnnotation));
-
-void annotationIsPresent(bool result) {
-  expect(result, isTrue);
-}
-
-void annotationIsMissing(bool result) {
-  expect(result, isFalse);
-}
-
-void someResultsFound(Iterable<dynamic> result) {
-  expect(result, isNotEmpty);
-}
-
-void noResultsFound(Iterable<dynamic> result) {
-  expect(result, isEmpty);
-}
-
-void resultsContainGettersAndSetters(Iterable<MethodMirror> result) {
-  Symbol getterName, setterName;
-  bool hasGetters, hasSetters;
-
-  getterName = const Symbol('annotatedGetter');
-  hasGetters = result.any((MethodMirror method) => method.simpleName == getterName);
-
-  setterName = const Symbol('annotatedSetter=');
-  hasSetters = result.any((MethodMirror method) => method.simpleName == setterName);
-
-  expect(hasGetters, isTrue);
-  expect(hasSetters, isTrue);
-}
 
 // vim: set ai et sw=2 syntax=dart :
